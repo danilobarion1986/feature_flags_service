@@ -1,26 +1,23 @@
-FROM ruby:2.6.4-alpine
+FROM ruby:2.6
+MAINTAINER Danilo Barion Nogueira <danilo.barion@gmail.com>
 
-ENV BUILD_PACKAGES tzdata git linux-headers build-base freetds-dev
+RUN apt-get update -qq \
+      && apt-get install -y --no-install-recommends libc6 \
+      libstdc++6 unixodbc-dev vim locales postgresql-client \
+      && rm -rf /var/lib/apt/lists/*
 
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/main' >> /etc/apk/repositories
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+      && locale-gen \
+      && export LC_ALL="en_US.utf8"
 
-RUN apk update && \
-    apk upgrade && \
-    apk add $BUILD_PACKAGES && \
-    rm -rf /var/cache/apk/*
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-WORKDIR /usr/src/app
+RUN mkdir -p /feature_flags_service
 
-RUN gem install bundler
-
+WORKDIR /feature_flags_service
 COPY Gemfile Gemfile.lock ./
-
-RUN bundle config build.nokogiri --use-system-libraries
-
+RUN gem install bundler
 RUN bundle install
 
-COPY . .
-
-EXPOSE 3000
-
-CMD ["rackup", "--host", "0.0.0.0", "--port", "8080"]
+ADD . /feature_flags_service
