@@ -1,26 +1,9 @@
-require 'roda'
+# frozen_string_literal: true
 
-class App < Roda
-  route do |r|
-    # GET / request
-    r.root do
-      'My Roda App!'
-    end
+require_relative './app'
 
-    # /feature branch
-    r.on 'feature' do
-      # Set variable for all routes in /feature branch
-      @feature = 'my_feature'
+use Rack::Reloader, 0
+use Rack::Runtime
 
-      # /hello request
-      r.is do
-        # GET /hello request
-        r.get do
-          "#{@feature}!"
-        end
-      end
-    end
-  end
-end
-
+$LOAD_PATH.unshift('.')
 run App.freeze.app
