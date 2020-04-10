@@ -12,7 +12,7 @@ module Domain
           version: 1,
           git_tag: GIT_TAG,
           services: {
-            database: try { Models::YourModel.count }
+            database: try { DB.test_connection }
           }
         }
       end
