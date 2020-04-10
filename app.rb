@@ -33,7 +33,7 @@ class App < Roda
   end
 
   error do |e|
-    { error: e.message }
+    puts({ error: e.message }.inspect)
   end
 
   status_handler(403) do
@@ -58,6 +58,10 @@ class App < Roda
     # route: GET /healthcheck
     r.is 'healthcheck' do
       Domain::Healthcheck.call
+    end
+
+    r.is 'flipper' do
+      { features: Flipper.features.map { |feature| Models::Feature.new(feature).as_json } }
     end
 
     r.on 'v1' do
