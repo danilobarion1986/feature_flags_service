@@ -1,0 +1,1 @@
+[{"path":"/healthcheck","methods":["GET"]},{"path":"/v1/domain/:domain_id","methods":["GET"]},{"path":"/v1/domain","methods":["GET"]}]
