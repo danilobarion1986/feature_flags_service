@@ -5,6 +5,7 @@ module Models
   # Model for "flipper_features"
   class Feature
     attr_reader :flipper_feature
+
     def initialize(flipper_feature)
       @flipper_feature = flipper_feature
     end
