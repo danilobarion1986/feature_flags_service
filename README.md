@@ -1,6 +1,6 @@
-# Roda & Sequel
+# Feature Flags Service
 
-API skeleton using roda and sequel.
+[WIP] Little API to control the feature flags on your systems.
 
 ## Dependencies
 
