@@ -2,6 +2,7 @@
 
 require 'flipper'
 require 'flipper-ui'
+require 'flipper-api'
 require 'flipper/adapters/sequel'
 
 Flipper.configure do |config|
@@ -14,3 +15,4 @@ end
 FLIPPER_UI_APP = Flipper::UI.app(Flipper) { |builder|
   builder.use Rack::Session::Cookie, secret: "something long and random"
 }
+FLIPPER_API_APP = Flipper::Api.app(Flipper)

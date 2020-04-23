@@ -61,7 +61,13 @@ class App < Roda
     end
 
     # route: GET /flipper
-    r.on "flipper" do
+    r.on 'flipper' do
+      r.on 'api' do
+        puts 'flipper-api'
+        r.run(FLIPPER_API_APP)
+      end
+
+      puts 'flipper-api'
       r.run(FLIPPER_UI_APP)
     end
 
