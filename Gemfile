@@ -13,6 +13,7 @@ gem 'dry-schema'
 gem 'pg'
 gem 'sequel_pg'
 gem 'flipper'
+gem 'flipper-ui'
 gem 'flipper-sequel'
 
 # If you want to generate a JSON with routes' metadata
