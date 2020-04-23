@@ -5,17 +5,19 @@ require_relative '../config/base'
 desc 'Database tasks'
 namespace :db do
   migrations_path = "#{APP_ROOT}/db/migrations"
-  user = ENV['POSTGRES_USER']
-  db = ENV['POSTGRES_DB']
 
   desc 'Create the database for the given environment'
   task :create do
-    system("docker exec -ti roda_db psql -U #{user} -c 'CREATE DATABASE #{db};'")
+    puts 'Creating database...'
+    system("createdb -w -e #{ENV['PGDATABASE']}")
+  rescue StandardError => e
+    puts "Error => #{e.message}"
   end
 
   desc 'Drop the database for the given environment'
   task :drop do
-    system("docker exec -ti roda_db psql -U #{user} -c 'DROP DATABASE #{db};'")
+    puts 'Dropping database...'
+    system("dropdb -w -e #{ENV['PGDATABASE']}")
   rescue StandardError => e
     puts "Error => #{e.message}"
   end
