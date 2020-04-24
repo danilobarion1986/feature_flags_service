@@ -7,11 +7,9 @@ namespace :db do
   MIGRATIONS_PATH = "#{APP_ROOT}/db/migrations"
 
   def wait_for_pg!
-    command = "psql -h #{ENV['PGHOST']} -p #{ENV['PGPORT']} -U #{ENV['PGUSER']} -e #{ENV['PGDATABASE']} -c '\\q'"
-    retorno = system("PGPASSWORD=#{ENV['POSTGRES_PASSWORD']} #{command}")
+    command = "psql -h #{ENV['PGHOST']} -p #{ENV['PGPORT']} -U #{ENV['PGUSER']} -e postgres -c '\\q'"
 
-    while retorno == nil
-      retorno = system("PGPASSWORD=#{ENV['POSTGRES_PASSWORD']} #{command}")
+    until (result = system("PGPASSWORD=#{ENV['POSTGRES_PASSWORD']} #{command}"))
       puts "Postgres is unavailable - sleeping"
       sleep 1
     end
@@ -30,7 +28,7 @@ namespace :db do
   task :drop do
     puts 'Dropping database...'
     wait_for_pg!
-    system("dropdb -w -e #{ENV['PGDATABASE']}")
+    system("dropdb --if-exists -w -e #{ENV['PGDATABASE']}")
   rescue StandardError => e
     puts "Error => #{e.message}"
   end
