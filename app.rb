@@ -60,8 +60,15 @@ class App < Roda
       Domain::Healthcheck.call
     end
 
-    r.is 'flipper' do
-      { features: Flipper.features.map { |feature| Models::Feature.new(feature).as_json } }
+    # route: GET /flipper
+    r.on 'flipper' do
+      r.on 'api' do
+        puts 'flipper-api'
+        r.run(FLIPPER_API_APP)
+      end
+
+      puts 'flipper-api'
+      r.run(FLIPPER_UI_APP)
     end
 
     r.on 'v1' do

@@ -5,12 +5,11 @@ services:
     build: .
     depends_on:
       - database
-    container_name: feature_flags_service
     volumes:
       - .:/feature_flags_service
     ports:
       - 3000:3000
-    command: sh -c "rake db:setup && rerun 'rackup -p 3000'"
+    command: sh -c "bundle exec rake db:setup && bundle exec rerun 'rackup -p 3000'"
     env_file:
       - .env
     stdin_open: true
@@ -24,7 +23,6 @@ services:
       - 5432:5432
     volumes:
       - ./config/db:/var/lib/postgresql/config/db
-    container_name: roda_db
 
 volumes:
   postgres-data:
