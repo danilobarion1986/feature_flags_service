@@ -5,7 +5,6 @@ services:
     build: .
     depends_on:
       - database
-    container_name: feature_flags_service
     volumes:
       - .:/feature_flags_service
     ports:
@@ -24,7 +23,6 @@ services:
       - 5432:5432
     volumes:
       - ./config/db:/var/lib/postgresql/config/db
-    container_name: roda_db
 
 volumes:
   postgres-data:

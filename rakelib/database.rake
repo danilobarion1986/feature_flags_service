@@ -4,11 +4,23 @@ require_relative '../config/base'
 
 desc 'Database tasks'
 namespace :db do
-  migrations_path = "#{APP_ROOT}/db/migrations"
+  MIGRATIONS_PATH = "#{APP_ROOT}/db/migrations"
+
+  def wait_for_pg!
+    command = "psql -h #{ENV['PGHOST']} -p #{ENV['PGPORT']} -U #{ENV['PGUSER']} -e #{ENV['PGDATABASE']} -c '\\q'"
+    retorno = system("PGPASSWORD=#{ENV['POSTGRES_PASSWORD']} #{command}")
+
+    while retorno == nil
+      retorno = system("PGPASSWORD=#{ENV['POSTGRES_PASSWORD']} #{command}")
+      puts "Postgres is unavailable - sleeping"
+      sleep 1
+    end
+  end
 
   desc 'Create the database for the given environment'
   task :create do
     puts 'Creating database...'
+    wait_for_pg!
     system("createdb -w -e #{ENV['PGDATABASE']}")
   rescue StandardError => e
     puts "Error => #{e.message}"
@@ -17,6 +29,7 @@ namespace :db do
   desc 'Drop the database for the given environment'
   task :drop do
     puts 'Dropping database...'
+    wait_for_pg!
     system("dropdb -w -e #{ENV['PGDATABASE']}")
   rescue StandardError => e
     puts "Error => #{e.message}"
@@ -24,27 +37,33 @@ namespace :db do
 
   desc 'Execute all pending migrations. With the "true" parameter, it ignores missing migration files'
   task :migrate, [:ignore_missing] do |_t, args|
+    wait_for_pg!
+
     require_relative '../config/sequel'
     Sequel.extension :migration
 
     extra_params = { allow_missing_migration_files: args[:ignore_missing] }.compact
-    Sequel::Migrator.run(DB, migrations_path, extra_params)
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH, extra_params)
   rescue Sequel::Migrator::Error => e
     puts "Error => #{e.message}"
   end
 
   desc 'Reset the database state, executing the "down" block of each migration'
   task :reset do
+    wait_for_pg!
+
     require_relative '../config/sequel'
     Sequel.extension :migration
 
-    Sequel::Migrator.run(DB, migrations_path, target: 0)
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH, target: 0)
   rescue Sequel::Migrator::Error => e
     puts "Error => #{e.message}"
   end
 
   desc 'Populates the database using the file "db/seeds.rb"'
   task :seed do
+    wait_for_pg!
+
     require_relative '../config/sequel'
 
     Db::Seeds.call
