@@ -25,7 +25,6 @@ module Domain
           time: response_time { yield }
         }
       rescue StandardError
-        @fail = true
         { status: :not_ok }
       end
 

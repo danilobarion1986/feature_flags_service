@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-RSpec.describe Models::YourModel do
+RSpec.describe Domain::YourModel do
   describe '.all' do
-    it 'returns an array of Models::YourModel objects' do
+    it 'returns an array of Domain::YourModel objects' do
       retorno = described_class.all
 
       expect(retorno.all? do |item|

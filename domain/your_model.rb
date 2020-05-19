@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Domain
-  module YourMainDomain
+  class YourModel < Sequel::Model(:your_model)
   end
 end

@@ -63,11 +63,9 @@ class App < Roda
     # route: GET /flipper
     r.on 'flipper' do
       r.on 'api' do
-        puts 'flipper-api'
         r.run(FLIPPER_API_APP)
       end
 
-      puts 'flipper-api'
       r.run(FLIPPER_UI_APP)
     end
 
@@ -75,14 +73,14 @@ class App < Roda
       r.on 'domain' do
         # route: GET /v1/domain/:domain_id
         r.get :d do |domain_id|
-          { domain: Models::YourModel.where(id: domain_id).first || {} }
+          { domain: Domain::YourModel.where(id: domain_id).first || {} }
         end
 
         r.is do
           # route: GET /v1/domain
           r.get do
             @start_time = clock_time
-            { domain: Models::YourModel.all }
+            { domain: Domain::YourModel.all }
           end
         end
       end

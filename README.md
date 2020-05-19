@@ -14,22 +14,19 @@
 
 ```bash
 $ gem install bundler && bundle install
-$ docker-compose up -d database
-$ bundle exec rake db:setup
+$ docker-compose up
 ```
 
-## Running It Locally
+## Running Migrations
 
 ```bash
-$ rerun "rackup -p 3000"
+$ docker-compose run --rm app bundle exec rake db:migrate
 ```
 
 ## Running Tests
 
 ```bash
-$ docker-compose up -d database
-$ RACK_ENV=test bundle exec rake db:setup
-$ rake # or "bundle exec rspec"
+$ docker-compose run --rm app bundle exec rspec
 ```
 
 After running the test suite, the coverage report is on the **coverage/index.html** file.
